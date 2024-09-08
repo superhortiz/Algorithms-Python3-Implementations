@@ -5,6 +5,6 @@ This repository contains a collection of algorithms and data structures implemen
 - Sorting Algorithms: Selection Sort, Insertion Sort, Shellsort, Mergesort, Quicksort
 - Searching Algorithms: Binary Search, Binary Search Trees, Red-Black BSTs, 1d Range Search, Kd-Trees
 - Graph Algorithms: Dijkstra, A* Implementation
-- Miscellaneous: Shuffling, Quick Select, and more
+- Others: Shuffling, Quick Select, and more
 
 This repository aims to provide a comprehensive resource for learning and referencing algorithms and data structures in Python.

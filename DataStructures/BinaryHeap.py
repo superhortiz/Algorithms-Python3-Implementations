@@ -1,4 +1,4 @@
-class binaryHeap:
+class BinaryHeap:
     """
     A binary heap implementation (max-heap) using an array.
 
@@ -83,7 +83,7 @@ class binaryHeap:
 
 # Example usage
 if __name__ == "__main__":
-    heap = binaryHeap()
+    heap = BinaryHeap()
     
     # Insert elements into the heap
     heap.insert(10)

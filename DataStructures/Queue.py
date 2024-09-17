@@ -3,7 +3,7 @@ class Queue:
     A queue implementation using a singly linked list.
 
     Methods:
-        isEmpty(): Checks if the queue is empty.
+        is_empty(): Checks if the queue is empty.
         enqueue(val): Adds a value to the end of the queue.
         dequeue(): Removes and returns the value from the front of the queue.
         __str__(): Returns a string representation of the queue.
@@ -29,7 +29,7 @@ class Queue:
             self.val = val
             self.next = next
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Check if the queue is empty.
 
@@ -61,11 +61,11 @@ class Queue:
             The value removed from the front of the queue.
             None: If the queue is empty.
         """
-        if not self.isEmpty():
+        if not self.is_empty():
             val = self.first.val
             self.first = self.first.next
 
-            if self.isEmpty():
+            if self.is_empty():
                 self.last = None
 
             return val
@@ -87,9 +87,10 @@ class Queue:
             curr = curr.next
         return ' -> '.join(sequence)
 
-
-# Example usage
-if __name__ == "__main__":
+def main():
+    """
+    Example usage
+    """
     queue = Queue()
     
     # Enqueue various types of elements
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     print("Queue after dequeues:", queue)
     
     # Check if the queue is empty
-    print("Is queue empty?", queue.isEmpty())
+    print("Is queue empty?", queue.is_empty())
     
     # Dequeue remaining elements
     queue.dequeue()
@@ -121,4 +122,8 @@ if __name__ == "__main__":
     print("Dequeued from empty queue:", queue.dequeue())
     
     # Check if the queue is empty again
-    print("Is queue empty?", queue.isEmpty())
+    print("Is queue empty?", queue.is_empty())
+
+
+if __name__ == "__main__":
+    main()

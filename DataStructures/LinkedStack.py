@@ -1,116 +1,106 @@
-class LinkedStack:
+class BinaryHeap:
     """
-    A stack implementation using a singly linked list.
+    A binary heap implementation (max-heap) using an array.
 
     Methods:
-        is_empty(): Checks if the stack is empty.
-        push(val): Pushes a value onto the stack.
-        pop(): Pops a value from the stack.
-        __str__(): Returns a string representation of the stack.
+        swim(k): Restores the heap order property by swimming up.
+        insert(newValue): Inserts a new value into the heap.
+        sink(k): Restores the heap order property by sinking down.
+        del_max(): Removes and returns the maximum value from the heap.
+        __str__(): Returns a string representation of the heap.
     """
-
     def __init__(self):
         """
-        Initialize an empty stack.
-        """
-        self.first = None
-
-    class Node:
-        """
-        A node in the linked list.
-
-        Attributes:
-            val: The value of the node.
-            next (Node): The next node in the linked list.
-        """
-        def __init__(self, val = 0, next = None):
-            self.val = val
-            self.next = next
-
-    def is_empty(self):
-        """
-        Check if the stack is empty.
-
-        Returns:
-            bool: True if the stack is empty, False otherwise.
-        """
-        return self.first is None
-
-    def push(self, val):
-        """
-        Push a value onto the stack.
+        Initializes an empty binary heap.
 
         Args:
-            val: The value to be pushed onto the stack.
+            a (list): The initial array to store heap elements. Defaults to [None].
         """
-        new_node = LinkedStack.Node(val, next = self.first)
-        self.first = new_node
+        self.a = [None]
+        self.n = 0
 
-    def pop(self):
+    def swim(self, k):
         """
-        Pop a value from the stack.
+        Restores the heap order property by swimming up the element at index k.
+
+        Args:
+            k (int): The index of the element to swim up.
+        """
+        while k > 1 and self.a[k // 2] < self.a[k]:
+            self.a[k // 2], self.a[k] = self.a[k], self.a[k // 2]
+            k = k // 2
+
+    def insert(self, newValue):
+        """
+        Inserts a new value into the heap.
+
+        Args:
+            newValue: The value to be inserted into the heap.
+        """
+        self.a.append(newValue)
+        self.n += 1
+        self.swim(self.n)
+
+    def sink(self, k):
+        """
+        Restores the heap order property by sinking down the element at index k.
+
+        Args:
+            k (int): The index of the element to sink down.
+        """
+        while 2 * k <= self.n:
+            j = 2 * k
+            if j < self.n and self.a[j] < self.a[j + 1]:
+                j += 1
+            if self.a[k] > self.a[j]:
+                break
+            self.a[k], self.a[j] = self.a[j], self.a[k]
+            k = j
+
+    def del_max(self):
+        """
+        Removes and returns the maximum value from the heap.
 
         Returns:
-            val: The value popped from the stack.
-            None: If the stack is empty.
+            The maximum value from the heap.
         """
-        if not self.is_empty():
-            val = self.first.val
-            self.first = self.first.next
-            return val
-        else:
-            print('The list is empty')
+        self.a[1], self.a[-1] = self.a[-1], self.a[1]
+        val = self.a.pop()
+        self.n -= 1
+        self.sink(1)
+        return val
 
     def __str__(self):
         """
-        Return a string representation of the stack.
+        Returns a string representation of the heap.
 
         Returns:
-            str: The string representation of the stack.
+            str: The string representation of the heap.
         """
-        curr = self.first
-        sequence = []
-        while curr:
-            sequence.append(str(curr.val))
-            curr = curr.next
-        return ' -> '.join(sequence)
+        printable = [str(self.a[i]) for i in range(1, self.n + 1)]
+        return ', '.join(printable)
 
 def main():
     """
     Example usage
     """
-    stack = LinkedStack()
+    heap = BinaryHeap()
     
-    # Push various types of elements onto the stack
-    stack.push(5)
-    stack.push("hello")
-    stack.push([1, 2, 3])
-    stack.push(3.14)
-    stack.push(True)
+    # Insert elements into the heap
+    heap.insert(10)
+    heap.insert(20)
+    heap.insert(5)
+    heap.insert(30)
+    heap.insert(15)
     
-    # Print the stack
-    print("Stack after pushes:", stack)
+    # Print the heap
+    print("Heap after inserts:", heap)  # Output: 30, 15, 5, 10, 20
     
-    # Pop elements from the stack
-    print("Popped:", stack.pop())
-    print("Popped:", stack.pop())
+    # Delete the maximum element
+    print("Deleted max element:", heap.del_max())  # Output: 30
     
-    # Print the stack after pops
-    print("Stack after pops:", stack)
-    
-    # Check if the stack is empty
-    print("Is stack empty?", stack.is_empty())  # Output: False
-    
-    # Pop remaining elements
-    stack.pop()
-    stack.pop()
-    stack.pop()
-    
-    # Try to pop from an empty stack
-    print("Popped from empty stack:", stack.pop())  # Output: The list is empty
-    
-    # Check if the stack is empty again
-    print("Is stack empty?", stack.is_empty())  # Output: True
+    # Print the heap after deletion
+    print("Heap after deleting max:", heap)  # Output: 20, 15, 5, 10
 
 
 if __name__ == "__main__":

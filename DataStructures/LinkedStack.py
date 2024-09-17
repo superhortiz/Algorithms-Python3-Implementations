@@ -3,7 +3,7 @@ class LinkedStack:
     A stack implementation using a singly linked list.
 
     Methods:
-        isEmpty(): Checks if the stack is empty.
+        is_empty(): Checks if the stack is empty.
         push(val): Pushes a value onto the stack.
         pop(): Pops a value from the stack.
         __str__(): Returns a string representation of the stack.
@@ -27,7 +27,7 @@ class LinkedStack:
             self.val = val
             self.next = next
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Check if the stack is empty.
 
@@ -54,7 +54,7 @@ class LinkedStack:
             val: The value popped from the stack.
             None: If the stack is empty.
         """
-        if not self.isEmpty():
+        if not self.is_empty():
             val = self.first.val
             self.first = self.first.next
             return val
@@ -75,9 +75,10 @@ class LinkedStack:
             curr = curr.next
         return ' -> '.join(sequence)
 
-
-# Example usage
-if __name__ == "__main__":
+def main():
+    """
+    Example usage
+    """
     stack = LinkedStack()
     
     # Push various types of elements onto the stack
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     print("Stack after pops:", stack)
     
     # Check if the stack is empty
-    print("Is stack empty?", stack.isEmpty())  # Output: False
+    print("Is stack empty?", stack.is_empty())  # Output: False
     
     # Pop remaining elements
     stack.pop()
@@ -109,4 +110,8 @@ if __name__ == "__main__":
     print("Popped from empty stack:", stack.pop())  # Output: The list is empty
     
     # Check if the stack is empty again
-    print("Is stack empty?", stack.isEmpty())  # Output: True
+    print("Is stack empty?", stack.is_empty())  # Output: True
+
+
+if __name__ == "__main__":
+    main()

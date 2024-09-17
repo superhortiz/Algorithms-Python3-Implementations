@@ -9,14 +9,14 @@ class BinaryHeap:
         delMax(): Removes and returns the maximum value from the heap.
         __str__(): Returns a string representation of the heap.
     """
-    def __init__(self, a = [None]):
+    def __init__(self):
         """
         Initializes an empty binary heap.
 
         Args:
             a (list): The initial array to store heap elements. Defaults to [None].
         """
-        self.a = a
+        self.a = [None]
         self.n = 0
 
     def swim(self, k):
@@ -80,9 +80,10 @@ class BinaryHeap:
         printable = [str(self.a[i]) for i in range(1, self.n + 1)]
         return ', '.join(printable)
 
-
-# Example usage
-if __name__ == "__main__":
+def main():
+    """
+    Example usage
+    """
     heap = BinaryHeap()
     
     # Insert elements into the heap
@@ -100,3 +101,7 @@ if __name__ == "__main__":
     
     # Print the heap after deletion
     print("Heap after deleting max:", heap)  # Output: 20, 15, 5, 10
+
+
+if __name__ == "__main__":
+    main()

@@ -41,7 +41,7 @@ def partition(a, lo, hi):
 
     return j
 
-def quickSelect(a, k):
+def quick_select(a, k):
     """
     Select the k-th smallest element in the list using the Quickselect algorithm.
 
@@ -70,11 +70,16 @@ def quickSelect(a, k):
             return a[k]
     return a[k]
 
-
-# Example usage
-if __name__ == "__main__":
+def main():
+    """
+    Example usage
+    """
     a = [10, 9, 6, 20, 7, 8, 13, 0, 15, 11, 19, 12, 1, 18, 4, 17, 2, 14, 16, 3, 5]
     k = 5
     print(a)
-    value = quickSelect(a, k)
+    value = quick_select(a, k)
     print(f"{k}th smallest item =", value)
+
+
+if __name__ == "__main__":
+    main()

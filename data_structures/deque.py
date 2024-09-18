@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Type
+from typing import Any, Generator, List, Optional
 
 class Deque:
     """
@@ -20,8 +20,7 @@ class Deque:
     Special Methods:
         __repr__(): Returns a string representation of the deque.
         __str__(): Returns a string representation of the deque.
-        __iter__(): Initializes the iterator by setting the current node to the first node.
-        __next__(): Returns the next item in the deque during iteration.
+        __iter__(): Generator function to iterate over the deque elements.
     """
 
     class Node:
@@ -50,17 +49,20 @@ class Deque:
     class DequeEmptyError(Exception):
         """
         Custom exception to be raised when attempting to access an element
-        from an empty deque.
+        from an empty queue.
+
+        Attributes:
+            message (str): Custom message for empty deque.
         """
         def __init__(self: 'DequeEmptyError', message: str = "DequeEmptyError: The deque is empty.") -> None:
             """
-            Initialize the exception
+            Initialize the exception.
             """
             self.message: str = message
         
         def __str__(self: 'DequeEmptyError') -> str:
             """
-            Returns the exception message
+            Returns the exception message.
             """
             return self.message
 
@@ -114,8 +116,11 @@ class Deque:
             val (Any): The item to be added.
 
         Raises:
-            ValueError: If the input item is None.
+            ValueError: If the val is None.
         """
+        if val is None:
+            raise ValueError
+
         self.__size += 1
         if self.is_empty():
             self.__first = self.__last = self.Node(val)
@@ -132,8 +137,11 @@ class Deque:
             val (Any): The item to be added.
 
         Raises:
-            ValueError: If the input item is None.
+            ValueError: If the val is None.
         """
+        if val is None:
+            raise ValueError
+
         self.__size += 1
         if self.is_empty():
             self.__first = self.__last = self.Node(val)
@@ -150,19 +158,19 @@ class Deque:
             Any: The removed item.
 
         Raises:
-            IndexError: If the deque is empty.
+            DequeEmptyError: If the deque is empty.
         """
         if self.is_empty():
             raise self.DequeEmptyError()
+
+        self.__size -= 1
+        item = self.__first.val
+        self.__first = self.__first.next
+        if self.__first is None:
+            self.__last = None
         else:
-            self.__size -= 1
-            item = self.__first.val
-            self.__first = self.__first.next
-            if self.__first is None:
-                self.__last = None
-            else:
-                self.__first.prev = None
-            return item
+            self.__first.prev = None
+        return item
 
     def remove_last(self: 'Deque') -> Any:
         """
@@ -172,19 +180,19 @@ class Deque:
             Any: The removed item.
 
         Raises:
-            IndexError: If the deque is empty.
+            DequeEmptyError: If the deque is empty.
         """
         if self.is_empty():
             raise self.DequeEmptyError()
+
+        self.__size -= 1
+        item = self.__last.val
+        self.__last = self.__last.prev
+        if self.__last is None:
+            self.__first = None
         else:
-            self.__size -= 1
-            item = self.__last.val
-            self.__last = self.__last.prev
-            if self.__last is None:
-                self.__first = None
-            else:
-                self.__last.next = None
-            return item
+            self.__last.next = None
+        return item
 
     def peek_first(self: 'Deque') -> Any:
         """
@@ -215,7 +223,7 @@ class Deque:
         return self.__last.val
 
     @classmethod
-    def from_list(cls: Type['Deque'], elements: List[Any]) -> 'Deque':
+    def from_list(cls: 'Deque', elements: List[Any]) -> 'Deque':
         """
         Alternative constructor, creates a Deque instance from a list.
 
@@ -223,7 +231,7 @@ class Deque:
             elements (List[Any]): List of elements to create a deque.
 
         Returns:
-            Deque: Returns the created instance of Deque.
+            deque (Deque): Returns the created instance of Deque.
         """
         deque = cls()
         for element in elements:
@@ -250,28 +258,14 @@ class Deque:
         sequence = [str(item) for item in self]
         return ' <-> '.join(sequence)
 
-    def __iter__(self: 'Deque') -> 'Deque':
+    def __iter__(self) -> Generator[Any, None, None]:
         """
-        Initializes the iterator by setting the current node to the first node.
-
-        Returns:
-            Deque: The iterator object itself.
+        Generator function to iterate over the deque elements.
+        
+        Yields:
+            Any: Value of the current node.
         """
-        self.__curr = self.__first
-        return self
-
-    def __next__(self: 'Deque') -> Any:
-        """
-        Returns the next item in the deque during iteration.
-
-        Returns:
-            Any: The value of the current node.
-
-        Raises:
-            StopIteration: If the end of the deque is reached.
-        """
-        if self.__curr is None:
-            raise StopIteration
-        item = self.__curr.val
-        self.__curr = self.__curr.next
-        return item
+        current = self.__first
+        while current:
+            yield current.val
+            current = current.next

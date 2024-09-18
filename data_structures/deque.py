@@ -27,16 +27,21 @@ class Deque:
     class Node:
         """
         Represents a node in the doubly linked list.
+        
+        Args:
+            val (Any): The value stored in the node.
+            next (Optional[Node]): Reference to the next node.
+            prev (Optional[Node]): Reference to the previous node.
 
+        Attributes:
+            val (Any): The value stored in the node.
+            next (Optional[Node]): Reference to the next node.
+            prev (Optional[Node]): Reference to the previous node.
         """
         def __init__(self: 'Node', val: Any, next: Optional['Node'] = None, prev: Optional['Node'] = None) -> None:
             """
             Initializes a Node.
 
-            Args:
-                val (Any): The value stored in the node.
-                next (Optional[Node]): Reference to the next node.
-                prev (Optional[Node]): Reference to the previous node.
             """
             self.val: Any = val
             self.next: Optional['Node'] = next

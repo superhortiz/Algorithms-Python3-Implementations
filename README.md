@@ -1,4 +1,4 @@
-# Algorithms-Python
+# Algorithms-Python3-Implementations
 This repository contains a collection of algorithms and data structures implemented in Python 3, including:
 
 Data Structures

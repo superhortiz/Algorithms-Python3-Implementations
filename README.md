@@ -1,9 +1,9 @@
 # Algorithms-Python3-Implementations
-This repository contains various algorithms and data structures implemented in Python. The structure of the repository is organized into two main categories: algorithms and data_structures.
+This repository contains various algorithms and data structures implemented in Python. The structure of the repository is organized into two main categories: Algorithms and Data Structures.
 
 ## Algorithms
 
-Sorting Algorithms
+Sorting Algorithms:
 
 - Dijkstra 3-Way Partition: Implementation of Dijkstra's 3-way partitioning algorithm.
 - Heap Sort: Implementation of Heap Sort.
@@ -17,7 +17,7 @@ Sorting Algorithms
 - Shell Sort: Implementation of Shell Sort.
 
 
-Other Algorithms
+Other Algorithms:
 
 - Quick Select: Implementation of the Quick Select algorithm.
 - Shuffle: Implementation of a shuffling algorithm.
@@ -25,7 +25,7 @@ Other Algorithms
 
 ## Data Structures
 
-Collections
+Collections:
 
 - Binary Heap: Implementation of a Binary Heap.
 - Deque: Implementation of a Deque.
@@ -35,7 +35,7 @@ Collections
 - Union Find: Implementation of Union-Find data structure.
 
 
-Trees
+Trees:
 
 - BST: Implementation of a Binary Search Tree.
 - Kd-Tree: Implementation of a KD-Tree.

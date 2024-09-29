@@ -1,32 +1,32 @@
 # Algorithms-Python3-Implementations
-This repository contains a collection of algorithms and data structures implemented in Python 3, including:
-
-Data Structures
-
-- Stacks: Implementation of stacks using lists and linked lists.
-- Queues: Implementation of queues using lists and linked lists.
-- Deques: Implementation of double-ended queues using lists and linked lists.
-- Randomized Queue: Implementation of a randomized queue using a list.
-- Union-Find: Implementation of the union-find data structure.
-- Binary Heaps: Implementation of binary heaps.
-
-- Trees
-    - Binary Search Trees: Implementation of binary search trees.
-    - Red-Black BSTs: Implementation of self-balancing red-black binary search trees.
-    - Kd-Trees (2d): Implementation of k-dimensional trees for 2D points.
+This repository contains various algorithms and data structures implemented in Python. The structure of the repository is organized into two main categories: algorithms and data_structures.
 
 Algorithms
+    Others
+        quick_select: Implementation of the Quick Select algorithm.
+        shuffle: Implementation of a shuffling algorithm.
+    
+    Sorting
+        dijkstra_3way_partition: Implementation of Dijkstra’s 3-way partitioning algorithm.
+        heap_sort: Implementation of Heap Sort.
+        insertion_sort: Implementation of Insertion Sort.
+        merge_sort: Implementation of Merge Sort.
+        merge_sort_bottom_up: Implementation of Bottom-Up Merge Sort.
+        merge_sort_improved: Improved version of Merge Sort.
+        quick_sort: Implementation of Quick Sort.
+        quick_sort_improved: Improved version of Quick Sort.
+        selection_sort: Implementation of Selection Sort.
+        shell_sort: Implementation of Shell Sort.
 
-- Sorting
-    - Selection sort
-    - Insertion sort
-    - Shellsort
-    - Mergesort (top-down and bottom-up)
-    - Quicksort (with and without 3-way partitioning)
-    - Heapsort
-- Graph Algorithms
-    - A Implementation*: Implementation of the A* pathfinding algorithm.
-- Others
-    - Shuffling: Implementation of shuffling algorithms.
-    - Quick Select: Implementation of the quick select algorithm.
- 
+Data Structures
+    Collections
+        binary_heap: Implementation of a Binary Heap.
+        deque: Implementation of a Deque.
+        queue: Implementation of a Queue.
+        randomized_queue: Implementation of a Randomized Queue.
+        stack: Implementation of a Stack.
+        union_find: Implementation of Union-Find data structure.
+    Trees
+        bst: Implementation of a Binary Search Tree.
+        kd_tree: Implementation of a KD-Tree.
+        red_black_bst: Implementation of a Red-Black Binary Search Tree.

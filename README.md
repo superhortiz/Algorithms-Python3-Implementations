@@ -1,5 +1,5 @@
 # Algorithms-Python3-Implementations
-This repository contains various algorithms and data structures implemented in Python. The structure of the repository is organized into two main categories: Algorithms and Data Structures.
+This repository contains various algorithms and data structures implemented in Python. The structure of the repository is organized into two main categories: Algorithms and Data Structures. The implementations are based on the algorithms and data structures described in the book "Algorithms, Part I, Fourth Edition" by Robert Sedgewick and Kevin Wayne, Princeton University.
 
 ## Algorithms
 

@@ -1,7 +1,7 @@
 import unittest
 import random
 from copy import deepcopy
-from .dijkstra_3way_partition import dijkstra_3way_partition
+from algorithms import dijkstra_3way_partition
 
 
 class TestSort(unittest.TestCase):

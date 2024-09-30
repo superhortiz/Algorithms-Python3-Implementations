@@ -1,24 +1,25 @@
-from typing import Any, Generator, List, Optional
+from typing import Any, Generator, List, Optional, Union
+
 
 class Queue:
     """
     A queue implementation using a singly linked list.
 
-    Attributes:
-        size (int): number of items in the queue.
-
     Methods:
         dequeue(): Removes and returns the value from the front of the queue.
         enqueue(val): Adds a value to the end of the queue.
         from_list(elements): Alternative constructor, creates a Queue instance from a list.
-        is_empty(): Checks if the queue is empty.
         peek_first(): Returns the value of the first element in the queue.
         peek_last(): Returns the value of the last element in the queue.
 
 
     Special Methods:
+        __bool__(): Checks if the queue is empty.
+        __getitem__(index): Allows indexing, supports both integer indices and slice objects.
         __iter__(): Generator function to iterate over the queue elements.
+        __len__(): Returns the number of items in the queue.
         __repr__(): Returns a string representation of the queue.
+        __reversed__(): Returns a reversed iterator over the queue.
         __str__(): Returns a string representation of the queue.
     """
 
@@ -71,41 +72,7 @@ class Queue:
         """
         self.__first: Node = None
         self.__last: Node = None
-        self.__size: int = 0
-
-    @property
-    def size(self: 'Queue') -> int:
-        """
-        Returns the number of items in the queue.
-
-        This attribute is read-only and cannot be modified directly.
-
-        Returns:
-            int: The number of items in the queue.
-        """
-        return self.__size
-
-    @size.setter
-    def size(self: 'Queue', *args, **kwargs) -> None:
-        """
-        Raises AttributeError to prevent modification.
-
-        The size attribute is updated internally by add and remove operations.
-        Attempting to set it directly will raise an AttributeError.
-
-        Raises:
-            AttributeError: Always raised to prevent modification.
-        """
-        raise AttributeError("This attribute is immutable")
-
-    def is_empty(self: 'Queue') -> bool:
-        """
-        Check if the queue is empty.
-
-        Returns:
-            bool: True if the queue is empty, False otherwise.
-        """
-        return self.__first is None
+        self._size: int = 0
 
     def enqueue(self: 'Queue', val: Any) -> None:
         """
@@ -118,9 +85,9 @@ class Queue:
             ValueError: If the val is None.
         """
         if val is None:
-            raise ValueError
+            raise ValueError("Cannot push None value onto the queue.")
 
-        self.__size += 1
+        self._size += 1
         oldlast = self.__last
         self.__last = Queue.Node(val)
         
@@ -139,14 +106,14 @@ class Queue:
         Raises:
             QueueEmptyError: If the queue is empty.
         """
-        if self.is_empty():
+        if not self.__bool__():
             raise self.QueueEmptyError()
 
-        self.__size -= 1
+        self._size -= 1
         val = self.__first.val
         self.__first = self.__first.next
 
-        if self.is_empty():
+        if not self.__bool__():
             self.__last = None
         return val
 
@@ -179,7 +146,7 @@ class Queue:
         return self.__last.val
 
     @classmethod
-    def from_list(cls: 'Queu', elements: List[Any]) -> 'Queue':
+    def from_list(cls, elements: List[Any]) -> 'Queue':
         """
         Alternative constructor, creates a Queue instance from a list.
 
@@ -196,25 +163,49 @@ class Queue:
 
         return queue
 
-    def __repr__(self: 'Queue') -> str:
+    def __bool__(self: 'Queue') -> bool:
         """
-        Returns a string representation of the queue.
+        Checks if the queue is empty.
 
         Returns:
-            str: The string representation of the queue.
+            bool: True if the queue has elements, False otherwise.
         """
-        sequence = [item for item in self]
-        return f"{self.__class__.__name__}.from_list({sequence})"
+        return self.__first is not None
 
-    def __str__(self: 'Queue') -> str:
+    def __getitem__(self: 'Queue', index: Union[int, slice]) -> Union[Any, List[Any]]:
         """
-        Returns a string representation of the queue.
+        Allows indexing, supports both integer indices and slice objects.
+
+        Args:
+            index (Union[int, slice]): The index or slice to retrieve items from the queue.
 
         Returns:
-            str: The string representation of the queue.
+            Union[Any, List[Any]]: The item at the specified index or a list of items for the specified slice.
+
+        Raises:
+            IndexError: If the index is out of range.
+            TypeError: If the argument is not an integer or slice.
+
         """
-        sequence = [str(item) for item in self]
-        return ' -> '.join(sequence)
+        # Case 1: Requesting a specific index
+        if isinstance(index, int):
+            if index >= self._size:
+                raise IndexError("Index out of range.")
+
+            index += self._size if index < 0 else 0
+            current = self.__first
+            for _ in range(index):
+                current = current.next
+            return current.val
+
+        # Case 2: Requesting a slice
+        elif isinstance(index, slice):
+            start, stop, step = index.indices(self._size)
+            return [self[i] for i in range(start, stop, step)]
+
+        # Case 3: Invalid argument
+        else:
+            raise TypeError("Invalid argument.")
 
     def __iter__(self: 'Queue') -> Generator[Any, None, None]:
         """
@@ -227,3 +218,43 @@ class Queue:
         while current:
             yield current.val
             current = current.next
+
+    def __len__(self: 'Queue') -> int:
+        """
+        Returns the number of items in the queue.
+
+        This attribute is read-only and cannot be modified directly.
+
+        Returns:
+            int: The number of items in the queue.
+        """
+        return self._size
+
+    def __repr__(self: 'Queue') -> str:
+        """
+        Returns a string representation of the queue.
+
+        Returns:
+            str: The string representation of the queue.
+        """
+        sequence = list(self)
+        return f"{type(self).__name__}.from_list({sequence})"
+
+    def __reversed__(self: 'Queue') -> Generator[Any, None, None]:
+        """
+        Returns a reversed iterator over the queue.
+
+        Returns:
+            list: A list of queue elements in reverse order.
+        """
+        return reversed(list(self))
+
+    def __str__(self: 'Queue') -> str:
+        """
+        Returns a string representation of the queue.
+
+        Returns:
+            str: The string representation of the queue.
+        """
+        sequence = map(str, list(self))
+        return ' -> '.join(sequence)

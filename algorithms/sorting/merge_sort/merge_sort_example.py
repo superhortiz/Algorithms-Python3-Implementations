@@ -1,5 +1,6 @@
 import random
-from .merge_sort import merge_sort
+from algorithms import merge_sort
+
 
 def demo() -> None:
     """

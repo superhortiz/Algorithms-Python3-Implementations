@@ -1,4 +1,5 @@
-from .randomized_queue import RandomizedQueue
+from data_structures import RandomizedQueue
+
 
 def demo():
     """
@@ -18,7 +19,7 @@ def demo():
     random_queue.enqueue(3)
     random_queue.enqueue(2)
     random_queue.enqueue(1)
-    print("Size of the queue =", random_queue.size)
+    print("Size of the queue =", len(random_queue))
     print("randomized queue after additions:", random_queue)
     print("randomized queue after additions:", repr(random_queue))
 
@@ -27,24 +28,18 @@ def demo():
         print(f"Item {i}: {item}")
 
     # Check methods
-    print(f"random_queue is empty? {random_queue.is_empty()}")
-    print(f"Size = {random_queue.size}")
-    print(f"Show a random element: {random_queue.sample()}")
-    print(f"Remove a random element: {random_queue.dequeue()}")
-    print(f"Size = {random_queue.size}")
-    print(f"Remove a random element: {random_queue.dequeue()}")
-    print(f"Size = {random_queue.size}")
+    print("Does the queue have elements?", bool(random_queue))
+    print("Size =", len(random_queue))
+    print("Show a random element:", random_queue.sample())
+    print("Remove a random element:", random_queue.dequeue())
+    print("Size =", len(random_queue))
+    print("Remove a random element:", random_queue.dequeue())
+    print("Size =", len(random_queue))
 
     # Use the alternative constructor
     random_queue2 = RandomizedQueue.from_list([5, 4, 3, 2, 1])
     print("Using alternative constructor:", random_queue2)
-    print("Size =", random_queue2.size)
-
-    # Try to change immutable attribute
-    try:
-        random_queue2.size = 2
-    except Exception as e:
-        print(e)
+    print("Size =", len(random_queue))
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
-from .binary_heap import BinaryHeap
+from data_structures import BinaryHeap
+
 
 def demo():
     """
@@ -38,6 +39,22 @@ def demo():
     
     # Print the heap after deletion
     print("Heap after deleting max:", heap)  # Output: 20, 15, 5, 10
+
+    # Check iterator
+    for i, item in enumerate(heap):
+        print(f"Item {i}:", item)
+
+    # Check contains method
+    item = 20
+    print(f"Is the item ({item}) in the heap?", item in heap)
+    item = 2
+    print(f"Is the item ({item}) in the heap?", item in heap)
+
+    # Check getitem method
+    index = 3
+    print(f"Element in the index {index}:", heap[index])
+    index = -1
+    print(f"Element in the index {index}:", heap[index])
 
 
 if __name__ == "__main__":

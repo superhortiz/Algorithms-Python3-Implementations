@@ -1,16 +1,21 @@
 from collections import defaultdict
+from typing import Iterator, List, Set, Union
+
 
 class UnionFind:
     """
     A weighted quick union data structure with path compression.
-
-    Attributes:
-        count (int): Number of connected components.
+    Provides methods for checking connectivity and merging components.
 
     Methods:
-        root(i): Finds the root of the component containing site i.
         connected(p, q): Checks if sites p and q are in the same component.
         union(p, q): Merges the components containing sites p and q.
+
+    Special Methods:
+        __getitem__(index): Allows indexing, supports both integer indices and slice objects.
+        __iter__(): Returns an iterator over the connected components.
+        __len__(): Returns the number of connected components.
+        __repr__(): Returns a string representation of connected components in the Union Find structure.
     """
 
     def __init__(self: 'UnionFind', n: int) -> None:
@@ -28,22 +33,10 @@ class UnionFind:
             raise ValueError("ValueError: Argument must be an integer.")
 
         # Initialize the id array: Each site is initially its own root.
-        self.__id = list(range(n))
-        self.__size = [1] * (n) # Initialize component sizes
+        self._id = list(range(n))
+        self._size = [1] * (n) # Initialize component sizes
 
-    @property
-    def count(self: 'UnionFind') -> int:
-        """
-        Returns the number of connected components.
-
-        This attribute is read-only and cannot be modified directly.
-
-        Returns:
-            int: The number of connected components.
-        """
-        return len(self.__components())
-    
-    def __components(self: 'UnionFind') -> list:
+    def _components(self: 'UnionFind') -> list:
         """
         Returns the connected components in the Union Find structure.
 
@@ -52,13 +45,13 @@ class UnionFind:
         """
         components = defaultdict(set)
 
-        for i, index in enumerate(self.__id):
-            root = self.__root(i)
+        for i, index in enumerate(self._id):
+            root = self._root(i)
             components[root].add(i)
 
         return list(components.values())
 
-    def __root(self: 'UnionFind', i: int) -> int:
+    def _root(self: 'UnionFind', i: int) -> int:
         """
         Finds the root (representative) of the component containing site i.
 
@@ -70,11 +63,11 @@ class UnionFind:
         """
 
         # Chase parent pointers until reach root (path compression)
-        while self.__id[i] != i:
+        while self._id[i] != i:
 
             # Path compression: Flatten the tree by updating parent pointers
-            self.__id[i] = self.__id[self.__id[i]]
-            i = self.__id[i]
+            self._id[i] = self._id[self._id[i]]
+            i = self._id[i]
 
         return i
 
@@ -96,10 +89,10 @@ class UnionFind:
         if not isinstance(p, int) or not isinstance(q, int):
             raise ValueError
 
-        if not 0 <= p <= len(self.__size) or not 0 <= q <= len(self.__size):
+        if not 0 <= p <= len(self._size) or not 0 <= q <= len(self._size):
             raise IndexError
 
-        return self.__root(p) == self.__root(q)
+        return self._root(p) == self._root(q)
 
     def union(self: 'UnionFind', p: int, q: int) -> None:
         """
@@ -116,25 +109,56 @@ class UnionFind:
         if not isinstance(p, int) or not isinstance(q, int):
             raise ValueError
 
-        if not 0 <= p <= len(self.__size) or not 0 <= q <= len(self.__size):
+        if not 0 <= p <= len(self._size) or not 0 <= q <= len(self._size):
             raise IndexError
 
         # Change root of p to point to root of q (weighted union)
-        i = self.__root(p)
-        j = self.__root(q)
+        i = self._root(p)
+        j = self._root(q)
 
         if i == j:
             return
 
-        if self.__size[i] < self.__size[j]:
-            self.__id[i] = j
-            self.__size[j] += self.__size[i]
+        if self._size[i] < self._size[j]:
+            self._id[i] = j
+            self._size[j] += self._size[i]
 
         else:
-            self.__id[j] = i
-            self.__size[i] += self.__size[j]
+            self._id[j] = i
+            self._size[i] += self._size[j]
 
-    def __str__(self: 'UnionFind') -> str:
+    def __getitem__(self: 'UnionFind', index: Union[int, slice]) -> Union[Set[int], List[Set[int]]]:
+        """
+        Allows indexing, supports both integer indices and slice objects.
+
+        Args:
+            index (Union[int, slice]): The index or slice to retrieve components.
+
+        Returns:
+            Union[Set[int], List[Set[int]]]: The component at the specified index or a list of components for the specified slice.
+        """
+        return self._components()[index]
+
+    def __iter__(self: 'UnionFind') -> Iterator[List[Set[int]]]:
+        """
+        Returns an iterator over the connected components.
+
+        Returns:
+            Iterator[List[Set[int]]]: An iterator over the list of sets,
+            where each set contains a connected component.
+        """
+        return iter(self._components())
+
+    def __len__(self: 'UnionFind') -> int:
+        """
+        Returns the number of connected components.
+
+        Returns:
+            int: The number of connected components.
+        """
+        return len(self._components())
+
+    def __repr__(self: 'UnionFind') -> str:
         """
         Returns a string representation of connected components in the
         Union Find structure.
@@ -142,4 +166,4 @@ class UnionFind:
         Returns:
             str: A string showing the connected components.
         """
-        return f"{self.__components()}"
+        return f"{self._components()}"

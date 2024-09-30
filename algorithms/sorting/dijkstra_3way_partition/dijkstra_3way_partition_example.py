@@ -1,5 +1,6 @@
 import random
-from .dijkstra_3way_partition import dijkstra_3way_partition
+from algorithms import dijkstra_3way_partition
+
 
 def demo() -> None:
     """

@@ -1,7 +1,7 @@
 import unittest
 import random
 from copy import deepcopy
-from .insertion_sort import insertion_sort
+from algorithms import insertion_sort
 
 
 class TestSort(unittest.TestCase):

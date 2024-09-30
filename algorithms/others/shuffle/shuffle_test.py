@@ -1,6 +1,6 @@
 import unittest
 import random
-from .shuffle import shuffle
+from algorithms import shuffle
 
 
 class TestShuffleFunction(unittest.TestCase):

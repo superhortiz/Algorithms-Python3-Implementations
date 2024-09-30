@@ -1,4 +1,5 @@
-from .stack import Stack
+from data_structures import Stack
+
 
 def demo():
     """
@@ -16,7 +17,7 @@ def demo():
     # Print the stack
     print("Stack after pushes:", stack)
     print("Stack after pushes:", repr(stack))
-    print("Size of the stack =", stack.size)
+    print("Size of the stack =", len(stack))
 
     # Iterate over elements
     for i, item in enumerate(stack):
@@ -30,7 +31,7 @@ def demo():
     print("Stack after pops:", stack)
     
     # Check if the stack is empty
-    print("Is stack empty?", stack.is_empty())  # Output: False
+    print("Does the stack have elements?", bool(stack))  # Output: True
     
     # Pop remaining elements
     stack.pop()
@@ -40,23 +41,36 @@ def demo():
     # Try to pop from an empty stack
     try:
         print("Popped from empty stack:", stack.pop())
+
     except Exception as e:
-        print("Error:", e)
-    
+        print("Try to remove elements from an empty stack:", e)
+
     # Check if the stack is empty again
-    print("Is stack empty?", stack.is_empty())  # Output: True
-
-    # Try to modifiy immutable attribute size
-    try:
-        stack.size = 5
-
-    except AttributeError as e:
-        print("Error:", e)
-        print("Size of the stack =", stack.size)
+    print("Does the stack have elements?", bool(stack))  # Output: False
 
     # Construct a stack using the alternative constructor
     stack2 = Stack.from_list([True, 3.14, [1, 2, 3], 'hello', 5])
     print("Using the alternative constructor:", stack2)
+
+    # Check contains method
+    item = 3.14
+    print(f"Is the item {item} in the stack: {stack2}?", item in stack2)
+    
+    item = 3.1
+    print(f"Is the item {item} in the stack: {stack2}?", item in stack2)
+
+    # Check get item method using index
+    index = 0
+    print(f"Get the item in the index [{index}]:", stack2[index])
+    index = -1
+    print(f"Get the item in the index [{index}]:", stack2[index])
+
+    # Check get item method using slice
+    s = slice(0, 3, 1)
+    print(f"Get the items in the [{s}]:", stack2[s])
+
+    # Check reversed
+    print("Reversed stack:", list(reversed(stack2)))
 
 
 if __name__ == "__main__":

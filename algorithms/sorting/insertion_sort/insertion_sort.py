@@ -1,4 +1,4 @@
-def __insertion_sort(data: list, lo: int, hi: int) -> None:
+def _insertion_sort(data: list, lo: int, hi: int) -> None:
     """
     Sort a sublist of elements in ascending order using the insertion sort algorithm.
 
@@ -37,4 +37,4 @@ def insertion_sort(data: list) -> None:
     if not isinstance(data, list):
         raise ValueError("ValueError: Input must be a list.")
 
-    __insertion_sort(data, 0, len(data) - 1)
+    _insertion_sort(data, 0, len(data) - 1)

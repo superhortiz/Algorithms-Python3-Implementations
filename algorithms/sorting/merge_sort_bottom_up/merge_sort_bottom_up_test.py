@@ -1,7 +1,7 @@
 import unittest
 import random
 from copy import deepcopy
-from .merge_sort_bottom_up import merge_sort_bottom_up
+from algorithms import merge_sort_bottom_up
 
 
 class TestSort(unittest.TestCase):

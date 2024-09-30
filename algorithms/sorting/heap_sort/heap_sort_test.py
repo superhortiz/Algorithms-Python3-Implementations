@@ -1,7 +1,7 @@
 import unittest
 import random
 from copy import deepcopy
-from .heap_sort import Heapsort
+from algorithms import Heapsort
 
 
 class TestSort(unittest.TestCase):

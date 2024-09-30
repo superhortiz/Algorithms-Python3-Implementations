@@ -1,5 +1,6 @@
 import random
-from .heap_sort import Heapsort
+from algorithms import Heapsort
+
 
 def demo() -> None:
     """

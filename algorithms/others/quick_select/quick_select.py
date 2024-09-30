@@ -1,5 +1,6 @@
 import random
 
+
 def partition(a: list, lo: int, hi: int) -> int:
     """
     Partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi] and return the index j.

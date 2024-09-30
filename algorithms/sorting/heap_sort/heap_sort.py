@@ -32,7 +32,7 @@ class Heapsort:
 
         # Build the heap in array a so that largest value is at the root
         for k in range(n // 2, 0, -1):
-            self.__sink(a, k, n)
+            self._sink(a, k, n)
 
         # Extract elements from the heap one by one
         while n > 1:
@@ -40,13 +40,13 @@ class Heapsort:
             a[1], a[n] = a[n], a[1]
             n -= 1
             # Call sink on the reduced heap
-            self.__sink(a, 1, n)
+            self._sink(a, 1, n)
 
         # Remove the placeholder None
         a.pop(0)
             
     @staticmethod
-    def __sink(a: list, k: int, n: int) -> None:
+    def _sink(a: list, k: int, n: int) -> None:
         """
         Restores the heap order property by sinking down the element at index k.
 
@@ -67,12 +67,3 @@ class Heapsort:
             # Swap the parent with the largest child
             a[k], a[j] = a[j], a[k]
             k = j
-
-
-# Example usage
-if __name__ == "__main__":
-    a = [10, 9, 6, 20, 7, 8, 13, 15, 11, 19, 12, 1, 18, 4, 17, 2, 14, 16, 3, 5]
-    print(a)
-    print("\nSorted Array in Ascending Order:")
-    Heapsort(a)
-    print(a)

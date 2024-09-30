@@ -1,5 +1,6 @@
 import random
-from .shell_sort import shell_sort
+from algorithms import shell_sort
+
 
 def demo() -> None:
     """

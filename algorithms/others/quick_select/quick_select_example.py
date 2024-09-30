@@ -1,5 +1,6 @@
 import random
-from .quick_select import quick_select
+from algorithms import quick_select
+
 
 def demo():
     """

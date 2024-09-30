@@ -1,5 +1,6 @@
 import random
 
+
 def shuffle(a: list) -> None:
     """
     Shuffle the array using the Knuth (or Fisher-Yates) shuffle algorithm.

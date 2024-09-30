@@ -1,5 +1,6 @@
 import unittest
-from .binary_heap import BinaryHeap
+from data_structures import BinaryHeap
+
 
 class TestBinaryHeap(unittest.TestCase):
     def test_insert(self):
@@ -38,9 +39,9 @@ class TestBinaryHeap(unittest.TestCase):
 
     def test_empty(self):
         heap = BinaryHeap()
-        with self.assertRaises(IndexError):
+        with self.assertRaises(BinaryHeap.HeapEmptyError):
             heap.del_max()
-        with self.assertRaises(IndexError):
+        with self.assertRaises(BinaryHeap.HeapEmptyError):
             heap.peek_max()
 
     def test_none_insert(self):

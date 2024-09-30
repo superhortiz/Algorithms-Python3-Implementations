@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Iterator, List, Union
+
 
 class BinaryHeap:
     """
@@ -6,68 +7,81 @@ class BinaryHeap:
 
     Methods:
         del_max(): Removes and returns the maximum value from the heap.
-        insert(newValue): Inserts a new value into the heap.
+        insert(new_value): Inserts a new value into the heap.
         peek_max(): Returns the maximum value from the heap.
 
     Special Methods:
-        __str__(): Returns a string representation of the heap.
+        __getitem__(index): Allows indexing, supports both integer indices and slice objects.
+        __iter__(): Returns an iterator over the heap's elements.
+        __len__(): Returns the number of items in the heap.
+        __repr__(): Returns a string representation of the heap.
+        __reversed__(): Returns a reversed iterator over the heap's elements.
     """
+
+    class HeapEmptyError(Exception):
+        """
+        Custom exception to be raised when attempting to access an element from an empty heap.
+        """
+        def __init__(self: 'HeapEmptyError', message: str = "The heap is empty.") -> None:
+            self.message = message
+            super().__init__(self.message)
+
     def __init__(self: 'BinaryHeap') -> None:
         """
         Initializes an empty binary heap.
         """
-        self.__array = [None]
-        self.__n = 0
+        self._list: list = [None]
+        self._n: int = 0
 
-    def __swim(self: 'BinaryHeap', k: int) -> None:
+    def _swim(self: 'BinaryHeap', k: int) -> None:
         """
         Restores the heap order property by swimming up the element at index k.
 
         Args:
             k (int): The index of the element to swim up.
         """
-        while k > 1 and self.__array[k // 2] < self.__array[k]:
-            self.__array[k // 2], self.__array[k] = self.__array[k], self.__array[k // 2]
+        while k > 1 and self._list[k // 2] < self._list[k]:
+            self._list[k // 2], self._list[k] = self._list[k], self._list[k // 2]
             k = k // 2
 
-    def __sink(self: 'BinaryHeap', k: int) -> None:
+    def _sink(self: 'BinaryHeap', k: int) -> None:
         """
         Restores the heap order property by sinking down the element at index k.
 
         Args:
             k (int): The index of the element to sink down.
         """
-        while 2 * k <= self.__n:
+        while 2 * k <= self._n:
             j = 2 * k
 
             # Find the larger child
-            if j < self.__n and self.__array[j] < self.__array[j + 1]:
+            if j < self._n and self._list[j] < self._list[j + 1]:
                 j += 1
 
             # If the parent is larger than the largest child, stop sinking
-            if self.__array[k] > self.__array[j]:
+            if self._list[k] > self._list[j]:
                 break
 
             # Swap the parent with the largest child
-            self.__array[k], self.__array[j] = self.__array[j], self.__array[k]
+            self._list[k], self._list[j] = self._list[j], self._list[k]
             k = j
 
-    def insert(self: 'BinaryHeap', newValue: Any) -> None:
+    def insert(self: 'BinaryHeap', new_value: Any) -> None:
         """
         Inserts a new value into the heap.
 
         Args:
-            newValue (Any): The value to be inserted into the heap.
+            new_value (Any): The value to be inserted into the heap.
 
         Raises:
             ValueError: If the val is None.
         """
-        if newValue is None:
+        if new_value is None:
             raise ValueError("ValueError: Invalid value.")
 
-        self.__array.append(newValue)
-        self.__n += 1
-        self.__swim(self.__n)
+        self._list.append(new_value)
+        self._n += 1
+        self._swim(self._n)
 
     def del_max(self: 'BinaryHeap') -> Any:
         """
@@ -79,13 +93,13 @@ class BinaryHeap:
         Raises:
             IndexError: If the heap is empty.
         """
-        if self.__n == 0:
-            raise IndexError("IndexError: The heap is empty.")
+        if self._n == 0:
+            raise self.HeapEmptyError()
 
-        self.__array[1], self.__array[-1] = self.__array[-1], self.__array[1]
-        val = self.__array.pop()
-        self.__n -= 1
-        self.__sink(1)
+        self._list[1], self._list[-1] = self._list[-1], self._list[1]
+        val = self._list.pop()
+        self._n -= 1
+        self._sink(1)
         return val
 
     def peek_max(self: 'BinaryHeap') -> Any:
@@ -98,16 +112,55 @@ class BinaryHeap:
         Raises:
             IndexError: If the heap is empty.
         """
-        if self.__n == 0:
-            raise IndexError("IndexError: The heap is empty.")
+        if self._n == 0:
+            raise self.HeapEmptyError()
 
-        return self.__array[1]
+        return self._list[1]
 
-    def __str__(self: 'BinaryHeap') -> str:
+    def __getitem__(self: 'BinaryHeap', index: Union[int, slice]) -> Union[Any, List[Any]]:
+        """
+        Allows indexing, supports both integer indices and slice objects.
+
+        Args:
+            index (Union[int, slice]): The index or slice to retrieve items from the heap.
+
+        Returns:
+            Union[Any, List[Any]]: The item at the specified index or a list of items for the specified slice.
+        """
+        return self._list[1:][index]
+
+    def __iter__(self: 'BinaryHeap') -> Iterator[Any]:
+        """
+        Returns an iterator over the heap's elements.
+
+        Returns:
+            Iterator[Any]: Iterator over the heap's elements.
+        """
+        return iter(self._list[1::])
+
+    def __len__(self: 'BinaryHeap') -> int:
+        """
+        Returns the number of items in the heap.
+
+        Returns:
+            int: The number of items in the heap.
+        """
+        return self._n
+
+    def __repr__(self: 'BinaryHeap') -> str:
         """
         Returns a string representation of the heap.
 
         Returns:
             str: The string representation of the heap.
         """
-        return f"{self.__array[1::]}"
+        return f"{self._list[1::]}"
+
+    def __reversed__(self: 'BinaryHeap') -> Iterator[Any]:
+        """
+        Returns a reversed iterator over the heap's elements.
+
+        Returns:
+            Iterator[Any]: Reversed iterator over the heap's elements.
+        """
+        return reversed(self._list[1::])

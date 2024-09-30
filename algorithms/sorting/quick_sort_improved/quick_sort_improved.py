@@ -1,5 +1,6 @@
 import random
-from algorithms.sorting.insertion_sort.insertion_sort import __insertion_sort
+from algorithms.sorting.insertion_sort.insertion_sort import _insertion_sort
+
 
 def median_of_3(a: int, b: int, c: int, arr: list) -> int:
     """
@@ -81,7 +82,7 @@ def sort(a: list, lo: int, hi: int) -> None:
     # Improvement 1: Use insertion sort for small subarrays (recommended = 10)
     cutoff = 10
     if hi <= lo + cutoff - 1:
-        __insertion_sort(a, lo, hi)
+        _insertion_sort(a, lo, hi)
         return
 
     # Improvement 2: Estimate true median by taking median of sample (recommended = 3 items)

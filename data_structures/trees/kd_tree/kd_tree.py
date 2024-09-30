@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 
+
 class Point2D:
     """
     A class to represent a point in 2D space.
@@ -34,8 +35,8 @@ class Point2D:
         if not isinstance(x, float) or not isinstance(y, float):
             raise ValueError("Coordinates must be numbers (float).")
 
-        self.__x = x
-        self.__y = y
+        self._x = x
+        self._y = y
 
     @property
     def x(self: 'Point2D') -> float:
@@ -45,7 +46,7 @@ class Point2D:
         Returns:
             float: The x-coordinate of the point.
         """
-        return self.__x
+        return self._x
 
     @property
     def y(self: 'Point2D') -> float:
@@ -55,7 +56,7 @@ class Point2D:
         Returns:
             float: The y-coordinate of the point.
         """
-        return self.__y
+        return self._y
 
     def distance_to(self: 'Point2D', that: 'Point2D') -> float:
         """
@@ -201,10 +202,10 @@ class RectHV:
         if xmax < xmin or ymax < ymin:
             raise ValueError("Invalid arguments: xmax must be >= xmin and ymax must be >= ymin.")
 
-        self.__xmin = xmin
-        self.__ymin = ymin
-        self.__xmax = xmax
-        self.__ymax = ymax
+        self._xmin = xmin
+        self._ymin = ymin
+        self._xmax = xmax
+        self._ymax = ymax
 
     @property
     def xmin(self: 'RectHV') -> float:
@@ -214,7 +215,7 @@ class RectHV:
         Returns:
             float: The minimum x-coordinate.
         """
-        return self.__xmin
+        return self._xmin
 
     @property
     def ymin(self: 'RectHV') -> float:
@@ -224,7 +225,7 @@ class RectHV:
         Returns:
             float: The minimum y-coordinate.
         """
-        return self.__ymin
+        return self._ymin
 
     @property
     def xmax(self: 'RectHV') -> float:
@@ -234,7 +235,7 @@ class RectHV:
         Returns:
             float: The maximum x-coordinate.
         """
-        return self.__xmax
+        return self._xmax
 
     @property
     def ymax(self: 'RectHV') -> float:
@@ -244,7 +245,7 @@ class RectHV:
         Returns:
             float: The maximum y-coordinate.
         """
-        return self.__ymax
+        return self._ymax
 
     def contains(self: 'RectHV', point: 'Point2D') -> bool:
         """
@@ -390,20 +391,20 @@ class KdTree:
             - Typical case: O(R + log N), where R is the number of points in the range.
             - Worst case (assuming the tree is balanced): O(R + √N).
 
-    Attributes:
-        size (int): The number of nodes in the 2D KdTree.
-
     Methods:
-        contains(point): Checks if a point exists in the 2D KdTree.
         draw(): Draw the 2D KdTree.
         insert(point): Inserts a new point into the 2D KdTree.
-        is_empty(): Checks if the 2D KdTree is empty.
         nearest(point): Finds the nearest neighbor to a given point in the 2D KdTree.
         print_tree(): Print the 2D KdTree in a structured format.
         range(rect): Finds all points in the 2D KdTree that lie within a given rectangle.
+
+    Special Methods:
+        __bool__(): Checks if the 2D KdTree is empty.
+        __contains__(point): Checks if a point exists in the 2D KdTree.
+        __len__(): Get the number of nodes in the 2D KdTree.
     """
 
-    # The searching space represents the rectangular bounds within which points are searched.
+    # The searching space represents the rectangular bounds within points are searched.
     SEARCHING_SPACE = RectHV(0., 0., 1., 1.)
 
     class TreeNode:
@@ -425,10 +426,10 @@ class KdTree:
                 point (Point2D): The 2-dimensional point stored in this node.
                 count (int): The size of the subtree rooted at this node.
             """
-            self.count = count
-            self.left = None
-            self.right = None
-            self.point = point
+            self.count: int = count
+            self.left: 'TreeNode' = None
+            self.right: 'TreeNode' = None
+            self.point: 'Point2D' = point
 
     def __init__(self: 'KdTree') -> None:
         """
@@ -436,36 +437,20 @@ class KdTree:
         """
         self.__root = None
 
-    @property
-    def size(self: 'KdTree') -> int:
-        """
-        Get the number of nodes in the 2D KdTree.
-
-        Returns:
-            int: The total number of nodes in the tree.
-        """
-        return self.__size(self.__root)
-
-    def __size(self: 'KdTree', x: TreeNode) -> int:
+    def _size(self: 'KdTree', node: TreeNode) -> int:
         """
         Gets the number of nodes in the 2D KdTree.
 
+        Args:
+            node (TreeNode): Node to read the size of the subtree rooted at this node.
+
         Returns:
-            int: The total number of nodes in the tree.
+            int: The total number of nodes in the subtree rooted at this node.
         """
-        if x is None:
+        if node is None:
             return 0
 
-        return x.count
-
-    def is_empty(self: 'KdTree') -> bool:
-        """
-        Checks if the 2D KdTree is empty.
-
-        Returns:
-            bool: True if the tree is empty, False otherwise.
-        """
-        return self.__root is None
+        return node.count
 
     def insert(self: 'KdTree', point: Point2D) -> None:
         """
@@ -480,64 +465,46 @@ class KdTree:
         if not isinstance(point, Point2D):
             raise ValueError("Argument must be a Point2D object.")
 
-        self.__root = self.__insert(self.__root, point, level = 0)
+        self.__root = self._insert(self.__root, point, level = 0)
 
-    def __insert(self: 'KdTree', node: TreeNode, newPoint: Point2D, level: int) -> TreeNode:
+    def _insert(self: 'KdTree', node: TreeNode, new_point: Point2D, level: int) -> TreeNode:
         """
         Recursively inserts a new point into the subtree rooted at the given node.
 
         Args:
             node (TreeNode): The root of the subtree.
-            newPoint (Point2D): The 2-dimensional point to be inserted.
+            new_point (Point2D): The 2-dimensional point to be inserted.
             level (int): The current level in the tree.
 
         Returns:
             TreeNode: The updated subtree root.
         """
         if node is None:
-            return self.TreeNode(newPoint, 1)
+            return self.TreeNode(new_point, 1)
 
         if level % 2 == 0:
-            key = newPoint.x
-            keyNode = node.point.x
-            secondKey = newPoint.y
-            secondKeyNode = node.point.y
+            key = new_point.x
+            key_node = node.point.x
+            second_key = new_point.y
+            second_key_node = node.point.y
 
         else:
-            key = newPoint.y
-            keyNode = node.point.y
-            secondKey = newPoint.x
-            secondKeyNode = node.point.x
+            key = new_point.y
+            key_node = node.point.y
+            second_key = new_point.x
+            second_key_node = node.point.x
 
-        if key < keyNode or (key == keyNode and secondKey != secondKeyNode):
-            node.left = self.__insert(node.left, newPoint, level + 1)
-        elif key > keyNode:
-            node.right = self.__insert(node.right, newPoint, level + 1)
-        elif key == keyNode and secondKey == secondKeyNode:
+        if key < key_node or (key == key_node and second_key != second_key_node):
+            node.left = self._insert(node.left, new_point, level + 1)
+        elif key > key_node:
+            node.right = self._insert(node.right, new_point, level + 1)
+        elif key == key_node and second_key == second_key_node:
             node.point = point
 
-        node.count = 1 + self.__size(node.left) + self.__size(node.right)
+        node.count = 1 + self._size(node.left) + self._size(node.right)
         return node
 
-    def contains(self: 'KdTree', point: Point2D) -> bool:
-        """
-        Checks if a point exists in the 2D KdTree.
-
-        Args:
-            point (Point2D): The 2-dimensional point to be checked.
-
-        Returns:
-            bool: True if the point exists in the tree, False otherwise.
-
-        Raises:
-            ValueError: If 'point' is not a Point2D object.
-        """
-        if not isinstance(point, Point2D):
-            raise ValueError("Argument must be a Point2D object.")
-
-        return not self.__get(point) is None
-
-    def __get(self: 'KdTree', point: Point2D) -> Point2D:
+    def _get(self: 'KdTree', point: Point2D) -> Point2D:
         """
         Retrieves a point from the 2D KdTree.
 
@@ -553,20 +520,20 @@ class KdTree:
         while node:
             if level % 2 == 0:
                 key = point.x
-                keyNode = node.point.x
-                secondKey = point.y
-                secondKeyNode = node.point.y
+                key_node = node.point.x
+                second_key = point.y
+                second_key_node = node.point.y
             else:
                 key = point.y
-                keyNode = node.point.y
-                secondKey = point.x
-                secondKeyNode = node.point.x
+                key_node = node.point.y
+                second_key = point.x
+                second_key_node = node.point.x
 
-            if key < keyNode or (key == keyNode and secondKey != secondKeyNode):
+            if key < key_node or (key == key_node and second_key != second_key_node):
                 node = node.left
-            elif key > keyNode:
+            elif key > key_node:
                 node = node.right
-            elif key == keyNode and secondKey == secondKeyNode:
+            elif key == key_node and second_key == second_key_node:
                 return node.point
             level += 1
 
@@ -580,43 +547,43 @@ class KdTree:
         """
         plt.xlim(0, 1)
         plt.ylim(0, 1)
-        self.__draw(self.__root, 0, KdTree.SEARCHING_SPACE)
+        self._draw(self.__root, 0, KdTree.SEARCHING_SPACE)
         plt.show()
 
-    def __draw(self: 'KdTree', node: TreeNode, level: int, curr: RectHV) -> None:
+    def _draw(self: 'KdTree', node: TreeNode, level: int, current_rect: RectHV) -> None:
         """
         Recursively draws the 2D KdTree.
 
         Args:
             node (TreeNode): The current node in the tree.
             level (int): The current level in the tree.
-            curr (RectHV): The current rectangle representing the node's region.
+            current_rect (RectHV): The current rectangle representing the node's region.
         """
         if node is None:
             return
 
         node.point.draw()
-        x, y = node.point.x, node.point.y
+        x_coordinate, y_coordinate = node.point.x, node.point.y
 
         if level % 2 == 0:
-            curr_left = RectHV(curr.xmin, curr.ymin, x, curr.ymax)
-            curr_right = RectHV(x, curr.ymin, curr.xmax, curr.ymax)
-            plt.plot([x, x], [curr.ymin, curr.ymax], 'r-')
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, x_coordinate, current_rect.ymax)
+            curr_right = RectHV(x_coordinate, current_rect.ymin, current_rect.xmax, current_rect.ymax)
+            plt.plot([x_coordinate, x_coordinate], [current_rect.ymin, current_rect.ymax], 'r-')
 
         else:
-            curr_left = RectHV(curr.xmin, curr.ymin, curr.xmax, y)
-            curr_right = RectHV(curr.xmin, y, curr.xmax, curr.ymax)
-            plt.plot([curr.xmin, curr.xmax], [y, y], 'b-')
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, current_rect.xmax, y_coordinate)
+            curr_right = RectHV(current_rect.xmin, y_coordinate, current_rect.xmax, current_rect.ymax)
+            plt.plot([current_rect.xmin, current_rect.xmax], [y_coordinate, y_coordinate], 'b-')
 
-        self.__draw(node.left, level + 1, curr_left)
-        self.__draw(node.right, level + 1, curr_right)
+        self._draw(node.left, level + 1, curr_left)
+        self._draw(node.right, level + 1, curr_right)
 
-    def range(self: 'KdTree', rect: RectHV) -> list:
+    def range(self: 'KdTree', search_rectangle: RectHV) -> list:
         """
         Finds all points in the 2D KdTree that lie within a given rectangle.
 
         Args:
-            rect (RectHV): The rectangle to search within.
+            search_rectangle (RectHV): The rectangle to search within.
 
         Returns:
             list: A list of points within the given rectangle.
@@ -624,23 +591,23 @@ class KdTree:
         Raises:
             ValueError: If 'that' is not a RectHV object.
         """
-        if not isinstance(rect, RectHV):
+        if not isinstance(search_rectangle, RectHV):
             raise ValueError("Argument must be a RectHV object.")
 
         inside_rec = []
-        self.__range(self.__root, rect, inside_rec, 0, KdTree.SEARCHING_SPACE)
+        self._range(self.__root, search_rectangle, inside_rec, 0, KdTree.SEARCHING_SPACE)
         return inside_rec
 
-    def __range(self: 'KdTree', node: TreeNode, rect: RectHV, inside_rec: list, level: int, curr: RectHV) -> None:
+    def _range(self: 'KdTree', node: TreeNode, search_rectangle: RectHV, inside_rec: list, level: int, current_rect: RectHV) -> None:
         """
         Recursively finds all points in the subtree rooted at the given node that lie within a given rectangle.
 
         Args:
             node (TreeNode): The current node in the tree.
-            rect (RectHV): The rectangle to search within.
+            search_rectangle (RectHV): The rectangle to search within.
             inside_rec (list): The list to store points found within the rectangle.
             level (int): The current level in the tree.
-            curr (RectHV): The current rectangle representing the node's region.
+            current_rect (RectHV): The current rectangle representing the node's region.
 
         Note:
             It modifies the list 'inside_rec'.
@@ -648,24 +615,24 @@ class KdTree:
         if node is None:
             return
 
-        if rect.contains(node.point):
+        if search_rectangle.contains(node.point):
             inside_rec.append(node.point)
 
-        x, y = node.point.x, node.point.y
+        x_coordinate, y_coordinate = node.point.x, node.point.y
 
         if level % 2 == 0:
-            curr_left = RectHV(curr.xmin, curr.ymin, x, curr.ymax)
-            curr_right = RectHV(x, curr.ymin, curr.xmax, curr.ymax)
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, x_coordinate, current_rect.ymax)
+            curr_right = RectHV(x_coordinate, current_rect.ymin, current_rect.xmax, current_rect.ymax)
 
         else:
-            curr_left = RectHV(curr.xmin, curr.ymin, curr.xmax, y)
-            curr_right = RectHV(curr.xmin, y, curr.xmax, curr.ymax)
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, current_rect.xmax, y_coordinate)
+            curr_right = RectHV(current_rect.xmin, y_coordinate, current_rect.xmax, current_rect.ymax)
 
-        if rect.intersects(curr_left):
-            self.__range(node.left, rect, inside_rec, level + 1, curr_left)
+        if search_rectangle.intersects(curr_left):
+            self._range(node.left, search_rectangle, inside_rec, level + 1, curr_left)
         
-        if rect.intersects(curr_right):
-            self.__range(node.right, rect, inside_rec, level + 1, curr_right)
+        if search_rectangle.intersects(curr_right):
+            self._range(node.right, search_rectangle, inside_rec, level + 1, curr_right)
 
     def nearest(self: 'KdTree', point: Point2D) -> Point2D:
         """
@@ -683,69 +650,69 @@ class KdTree:
         if not isinstance(point, Point2D):
             raise ValueError("Argument must be a Point2D object.")
 
-        if self.is_empty():
+        if not self.__bool__():
             return None
 
         champion = [self.__root.point]
-        self.__nearest(self.__root, point, 0, KdTree.SEARCHING_SPACE, champion)
+        self._nearest(self.__root, point, 0, KdTree.SEARCHING_SPACE, champion)
         return champion[0]
 
-    def __nearest(self: 'KdTree', node: TreeNode, p: Point2D, level: int, curr: RectHV, champion: list) -> None:
+    def _nearest(self: 'KdTree', node: TreeNode, point: Point2D, level: int, current_rect: RectHV, champion: list) -> None:
         """
         Recursively finds the nearest neighbor to a given point in the subtree rooted at the given node.
 
         Args:
             node (TreeNode): The current node in the tree.
-            p (Point2D): The point to find the nearest neighbor for.
+            point (Point2D): The point to find the nearest neighbor for.
             level (int): The current level in the tree.
-            curr (RectHV): The current rectangle representing the node's region.
+            current_rect (RectHV): The current rectangle representing the node's region.
             champion (list): A list containing the current nearest point.
 
         Note:
             It modifies the list 'champion'.
         """
-        if node is None or champion[0].distance_squared_to(p) < curr.distance_squared_to(p):
+        if node is None or champion[0].distance_squared_to(point) < current_rect.distance_squared_to(point):
             return  # Prune strategy
 
-        if p.distance_squared_to(node.point) < p.distance_squared_to(champion[0]):
+        if point.distance_squared_to(node.point) < point.distance_squared_to(champion[0]):
             champion[0] = node.point
 
-        x, y = node.point.x, node.point.y
+        x_coordinate, y_coordinate = node.point.x, node.point.y
 
         if level % 2 == 0:
-            curr_left = RectHV(curr.xmin, curr.ymin, x, curr.ymax)
-            curr_right = RectHV(x, curr.ymin, curr.xmax, curr.ymax)
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, x_coordinate, current_rect.ymax)
+            curr_right = RectHV(x_coordinate, current_rect.ymin, current_rect.xmax, current_rect.ymax)
 
         else:
-            curr_left = RectHV(curr.xmin, curr.ymin, curr.xmax, y)
-            curr_right = RectHV(curr.xmin, y, curr.xmax, curr.ymax)
+            curr_left = RectHV(current_rect.xmin, current_rect.ymin, current_rect.xmax, y_coordinate)
+            curr_right = RectHV(current_rect.xmin, y_coordinate, current_rect.xmax, current_rect.ymax)
 
         go_left = False
 
-        if curr_left.contains(p):
+        if curr_left.contains(point):
             go_left = True
-        elif curr_right.contains(p):
+        elif curr_right.contains(point):
             go_left = False
-        elif curr_left.distance_squared_to(p) < curr_right.distance_squared_to(p):
+        elif curr_left.distance_squared_to(point) < curr_right.distance_squared_to(point):
             go_left = True
         else:
             go_left = False
 
         if go_left:
-            self.__nearest(node.left, p, level + 1, curr_left, champion)
-            self.__nearest(node.right, p, level + 1, curr_right, champion)
+            self._nearest(node.left, point, level + 1, curr_left, champion)
+            self._nearest(node.right, point, level + 1, curr_right, champion)
 
         else:
-            self.__nearest(node.right, p, level + 1, curr_right, champion)
-            self.__nearest(node.left, p, level + 1, curr_left, champion)
+            self._nearest(node.right, point, level + 1, curr_right, champion)
+            self._nearest(node.left, point, level + 1, curr_left, champion)
 
     def print_tree(self: 'KdTree') -> None:
         """
         Prints the 2D KdTree in a structured format.
         """
-        self.__print_tree(self.__root)
+        self._print_tree(self.__root)
 
-    def __print_tree(self: 'KdTree', node: TreeNode = None, level: int = 0, prefix: str = "Root: ") -> None:
+    def _print_tree(self: 'KdTree', node: TreeNode = None, level: int = 0, prefix: str = "Root: ") -> None:
         """
         Recursively prints the 2D KdTree in a structured format.
 
@@ -754,9 +721,45 @@ class KdTree:
             level (int): The current level in the tree.
             prefix (str): The prefix to print before the node's point.
         """
-        if node is not None:
-            print(" " * (level * 4) + prefix + f"({node.point})")
+        if node:
+            print(f"{' ' * (level * 4)}{prefix} {node.point}")
             if node.left:
-                self.__print_tree(node.left, level + 1, "L--- ")
+                self._print_tree(node.left, level + 1, "L-->")
             if node.right:
-                self.__print_tree(node.right, level + 1, "R--- ")
+                self._print_tree(node.right, level + 1, "R-->")
+
+    def __bool__(self: 'KdTree') -> bool:
+        """
+        Checks if the 2D KdTree is not empty.
+
+        Returns:
+            bool: True if the tree is not empty, False otherwise.
+        """
+        return self.__root is not None
+
+    def __contains__(self: 'KdTree', point: Point2D) -> bool:
+        """
+        Checks if a point exists in the 2D KdTree.
+
+        Args:
+            point (Point2D): The 2-dimensional point to be checked.
+
+        Returns:
+            bool: True if the point exists in the tree, False otherwise.
+
+        Raises:
+            ValueError: If 'point' is not a Point2D object.
+        """
+        if not isinstance(point, Point2D):
+            raise ValueError("Argument must be a Point2D object.")
+
+        return self._get(point) is not None
+
+    def __len__(self: 'KdTree') -> int:
+        """
+        Get the number of nodes in the 2D KdTree.
+
+        Returns:
+            int: The total number of nodes in the tree.
+        """
+        return self._size(self.__root)

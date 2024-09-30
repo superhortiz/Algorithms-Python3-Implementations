@@ -1,4 +1,5 @@
-from .deque import Deque
+from data_structures import Deque
+
 
 def demo() -> None:
     """
@@ -16,6 +17,7 @@ def demo() -> None:
     # Print the deque
     print("Deque after additions:", deque)
     print("Deque after additions:", repr(deque))
+    print("Size deque =", len(deque))
     
     # Iterate over the elements of the deque
     for i, item in enumerate(deque):
@@ -29,8 +31,8 @@ def demo() -> None:
     print("Deque after removals:", deque)
     
     # Check if the deque is empty
-    print("Is deque empty?", deque.is_empty())
-    
+    print("Does the deque have more elements?", bool(deque))
+
     # Remove remaining items
     deque.remove_first()
     deque.remove_last()
@@ -43,16 +45,32 @@ def demo() -> None:
         print(e)  # Output: remove_first from empty deque
     
     # Check if the deque is empty again
-    print("Is deque empty?", deque.is_empty())
-
-    try:
-        deque.size = 4
-    except AttributeError as e:
-        print(e)
+    print("Does the deque have more elements?", bool(deque))
 
     # Create a deque using the alternative constructor
     deque2 = Deque.from_list(['True', '[1, 2, 3]', '5', 'hello', '100'])
     print("Create a deque using alternative constructor:", deque2)
+
+    # Check contains method
+    item = 100
+    print(f"Is the item {item} in the deque: {deque2}?", item in deque2)
+    
+    item = 101
+    print(f"Is the item {item} in the deque: {deque2}?", item in deque2)
+
+    # Check get item method using index
+    index = 0
+    print(f"Get the item in the index [{index}]:", deque2[index])
+    index = -1
+    print(f"Get the item in the index [{index}]:", deque2[index])
+
+    # Check get item method using slice
+    s = slice(0, 3, 1)
+    print(f"Get the items in the [{s}]:", deque2[s])
+
+    # Check reversed
+    print("Reversed deque:", list(reversed(deque2)))
+
 
 
 if __name__ == "__main__":

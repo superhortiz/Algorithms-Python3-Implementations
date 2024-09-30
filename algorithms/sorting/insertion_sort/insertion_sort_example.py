@@ -1,5 +1,6 @@
 import random
-from .insertion_sort import insertion_sort
+from algorithms import insertion_sort
+
 
 def demo() -> None:
     """

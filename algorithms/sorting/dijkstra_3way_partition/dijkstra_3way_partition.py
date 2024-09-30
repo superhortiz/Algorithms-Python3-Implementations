@@ -1,5 +1,6 @@
 import random
 
+
 def sort(a: list, lo: int, hi: int) -> None:
     """
     Sorts the array using the 3-way partitioning quicksort algorithm.

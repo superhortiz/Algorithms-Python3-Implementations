@@ -1,5 +1,6 @@
 import random
-from .quick_sort_improved import quick_sort_improved
+from algorithms import quick_sort_improved
+
 
 def demo() -> None:
     """

@@ -1,22 +1,23 @@
-from typing import Any, Generator, List, Optional
+from typing import Any, Generator, List, Optional, Union
+
 
 class Stack:
     """
     A stack implementation using a singly linked list.
 
-    Attributes:
-        size (int): number of items in the stack.
-
     Methods:
-        is_empty(): Checks if the stack is empty.
         from_list(elements): Alternative constructor, creates a Stack instance from a list.
         pop(): Pops a value from the stack.
         push(val): Pushes a value onto the stack.
 
     Special Methods:
+        __bool__(): Checks if the stack is empty.
+        __getitem__(index): Allows indexing, supports both integer indices and slice objects.
         __iter__(): Generator function to iterate over the stack elements.
+        __len__(): Returns the number of items in the stack.
         __repr__(): Returns a string representation of the stack.
-        __str__(): Return a string representation of the stack.
+        __reversed__(): Returns a reversed iterator over the stack.
+        __str__(): Returns a string representation of the stack.
     """
 
     class Node:
@@ -69,45 +70,11 @@ class Stack:
         Initialize an empty stack.
         """
         self.__first: Node = None
-        self.__size: int = 0
-
-    @property
-    def size(self: 'Stack') -> int:
-        """
-        Returns the number of items in the stack.
-
-        This attribute is read-only and cannot be modified directly.
-
-        Returns:
-            int: The number of items in the stack.
-        """
-        return self.__size
-
-    @size.setter
-    def size(self: 'Stack', *args, **kwargs) -> None:
-        """
-        Raises AttributeError to prevent modification.
-
-        The size attribute is updated internally by add and remove operations.
-        Attempting to set it directly will raise an AttributeError.
-
-        Raises:
-            AttributeError: Always raised to prevent modification.
-        """
-        raise AttributeError("This attribute is immutable")
-
-    def is_empty(self: 'Stack') -> bool:
-        """
-        Check if the stack is empty.
-
-        Returns:
-            bool: True if the stack is empty, False otherwise.
-        """
-        return self.__first is None
+        self._size: int = 0
 
     def push(self: 'Stack', val: Any) -> None:
         """
-        Push a value onto the stack.
+        Pushes a value onto the stack.
 
         Args:
             val (Any): The value to be pushed onto the stack.
@@ -116,15 +83,15 @@ class Stack:
             ValueError: If the val is None.
         """
         if val is None:
-            raise ValueError
+            raise ValueError("Cannot push None value onto the stack.")
             
         new_node = self.Node(val, next = self.__first)
         self.__first = new_node
-        self.__size += 1
+        self._size += 1
 
     def pop(self: 'Stack') -> Any:
         """
-        Pop a value from the stack.
+        Pops a value from the stack.
 
         Returns:
             val (Any): The value popped from the stack.
@@ -132,16 +99,16 @@ class Stack:
         Raises:
             StackEmptyError: If the stack is empty.
         """
-        if self.is_empty():
+        if not self.__bool__():
             raise self.StackEmptyError()
 
         val = self.__first.val
         self.__first = self.__first.next
-        self.__size -= 1
+        self._size -= 1
         return val
 
     @classmethod
-    def from_list(cls: 'Stack', elements: List[Any]) -> 'Stack':
+    def from_list(cls, elements: List[Any]) -> 'Stack':
         """
         Alternative constructor, creates a Stack instance from a list.
 
@@ -158,6 +125,80 @@ class Stack:
 
         return stack
 
+    def __bool__(self: 'Stack') -> bool:
+        """
+        Checks if the stack is empty.
+
+        Returns:
+            bool: True if the stack has elements, False otherwise.
+        """
+        return self.__first is not None
+
+    def __getitem__(self: 'Stack', index: Union[int, slice]) -> Union[Any, List[Any]]:
+        """
+        Allows indexing, supports both integer indices and slice objects.
+
+        Args:
+            index (Union[int, slice]): The index or slice to retrieve items from the stack.
+
+        Returns:
+            Union[Any, List[Any]]: The item at the specified index or a list of items for the specified slice.
+
+        Raises:
+            IndexError: If the index is out of range.
+            TypeError: If the argument is not an integer or slice.
+
+        """
+        # Case 1: Requesting a specific index
+        if isinstance(index, int):
+            if index >= self._size:
+                raise IndexError("Index out of range.")
+
+            index += self._size if index < 0 else 0
+            current = self.__first
+            for _ in range(index):
+                current = current.next
+            return current.val
+
+        # Case 2: Requesting a slice
+        elif isinstance(index, slice):
+            start, stop, step = index.indices(self._size)
+            return [self[i] for i in range(start, stop, step)]
+
+        # Case 3: Invalid argument
+        else:
+            raise TypeError("Invalid argument.")
+
+    def __iter__(self: 'Stack') -> Generator[Any, None, None]:
+        """
+        Generator function to iterate over the stack elements.
+
+        Yields:
+            Any: Value of the current node.
+        """
+        current = self.__first
+        while current:
+            yield current.val
+            current = current.next
+
+    def __len__(self: 'Stack') -> int:
+        """
+        Returns the number of items in the stack.
+
+        Returns:
+            int: The number of items in the stack.
+        """
+        return self._size
+
+    def __reversed__(self: 'Stack') -> Generator[Any, None, None]:
+        """
+        Returns a reversed iterator over the stack.
+
+        Returns:
+            list: A list of stack elements in reverse order.
+        """
+        return reversed(list(self))
+
     def __repr__(self: 'Stack') -> str:
         """
         Returns a string representation of the stack.
@@ -165,8 +206,8 @@ class Stack:
         Returns:
             str: The string representation of the stack.
         """
-        sequence = [item for item in self]
-        return f"{self.__class__.__name__}.from_list({sequence})"
+        sequence = list(self)
+        return f"{type(self).__name__}.from_list({sequence})"
 
     def __str__(self: 'Stack') -> str:
         """
@@ -175,17 +216,5 @@ class Stack:
         Returns:
             str: The string representation of the stack.
         """
-        sequence = [str(item) for item in self]
-        return ' -> '.join(sequence)
-
-    def __iter__(self) -> Generator[Any, None, None]:
-        """
-        Generator function to iterate over the stack elements.
-        
-        Yields:
-            Any: Value of the current node.
-        """
-        current = self.__first
-        while current:
-            yield current.val
-            current = current.next
+        sequence = map(str, list(self))
+        return '[' + ' -> '.join(sequence) + ']'

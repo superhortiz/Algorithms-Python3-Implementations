@@ -1,4 +1,5 @@
-from .shuffle import shuffle
+from algorithms import shuffle
+
 
 def demo() -> None:
     """

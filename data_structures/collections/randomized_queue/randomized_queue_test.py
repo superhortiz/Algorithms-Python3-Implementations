@@ -1,22 +1,23 @@
 import unittest
 import random
-from .randomized_queue import RandomizedQueue
+from data_structures import RandomizedQueue
+
 
 class TestRandomizedQueue(unittest.TestCase):
     def test_init(self):
         queue = RandomizedQueue()
-        self.assertEqual(queue.size, 0)
+        self.assertEqual(len(queue), 0)
 
     def test_enqueue(self):
         queue = RandomizedQueue()
         queue.enqueue(1)
-        self.assertEqual(queue.size, 1)
+        self.assertEqual(len(queue), 1)
 
     def test_dequeue(self):
         queue = RandomizedQueue()
         queue.enqueue(1)
         self.assertEqual(queue.dequeue(), 1)
-        self.assertEqual(queue.size, 0)
+        self.assertEqual(len(queue), 0)
         with self.assertRaises(RandomizedQueue.QueueEmptyError):
             queue.dequeue()
 
@@ -28,7 +29,7 @@ class TestRandomizedQueue(unittest.TestCase):
     def test_from_list(self):
         elements = [1, 2, 3]
         queue = RandomizedQueue.from_list(elements)
-        self.assertEqual(queue.size, len(elements))
+        self.assertEqual(len(queue), len(elements))
 
     def test_repr_str(self):
         queue = RandomizedQueue.from_list([1])

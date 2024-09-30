@@ -1,14 +1,15 @@
 import unittest
-from .union_find import UnionFind
+from data_structures import UnionFind
+
 
 class TestUnionFind(unittest.TestCase):
     def test_init(self):
         uf = UnionFind(5)
-        self.assertEqual(len(uf._UnionFind__id), 5)
+        self.assertEqual(len(uf), 5)
 
     def test_root(self):
         uf = UnionFind(5)
-        self.assertEqual(uf._UnionFind__root(0), 0)
+        self.assertEqual(uf._root(0), 0)
 
     def test_connected(self):
         uf = UnionFind(5)
@@ -47,13 +48,13 @@ class TestUnionFind(unittest.TestCase):
 
     def test_count(self):
         uf = UnionFind(5)
-        self.assertEqual(uf.count, 5)
+        self.assertEqual(len(uf), 5)
         uf.union(0, 1)
-        self.assertEqual(uf.count, 4)
+        self.assertEqual(len(uf), 4)
         uf.union(1, 2)
-        self.assertEqual(uf.count, 3)
+        self.assertEqual(len(uf), 3)
         uf.union(3, 4)
-        self.assertEqual(uf.count, 2)
+        self.assertEqual(len(uf), 2)
 
 
 if __name__ == "__main__":

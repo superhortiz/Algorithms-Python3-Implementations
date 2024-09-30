@@ -1,4 +1,5 @@
-from algorithms.sorting.insertion_sort.insertion_sort import __insertion_sort
+from algorithms.sorting.insertion_sort.insertion_sort import _insertion_sort
+
 
 def merge(a: list, aux: list, lo: int, mid: int, hi: int) -> None:
     """
@@ -54,7 +55,7 @@ def sort(a: list, aux: list, lo: int, hi: int) -> None:
     # Improvement 1: Use insertion sort for small subarrays. Cutoff ~ 7 items
     cutoff = 7
     if hi <= lo + cutoff - 1:
-        __insertion_sort(a, lo, hi)
+        _insertion_sort(a, lo, hi)
         return
 
     mid = lo + (hi - lo) // 2

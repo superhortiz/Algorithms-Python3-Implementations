@@ -1,6 +1,6 @@
 import unittest
-from .kd_tree import KdTree, Point2D, RectHV
 import random
+from data_structures import KdTree, Point2D, RectHV
 
 
 class TestKdTree(unittest.TestCase):
@@ -12,26 +12,26 @@ class TestKdTree(unittest.TestCase):
     def test_insert_single_point(self):
         """Test inserting a single point."""
         self.kd_tree.insert(Point2D(0.5, 0.5))
-        self.assertEqual(self.kd_tree.size, 1)
+        self.assertEqual(len(self.kd_tree), 1)
 
     def test_insert_multiple_points(self):
         """Test inserting multiple points."""
         points = [Point2D(0.5, 0.5), Point2D(0.2, 0.3), Point2D(0.8, 0.9)]
         for point in points:
             self.kd_tree.insert(point)
-        self.assertEqual(self.kd_tree.size, len(points))
+        self.assertEqual(len(self.kd_tree), len(points))
 
     def test_contains_existing_point(self):
         """Test checking if an existing point is in the tree."""
         point = Point2D(0.5, 0.5)
         self.kd_tree.insert(point)
-        self.assertTrue(self.kd_tree.contains(point))
+        self.assertTrue(point in self.kd_tree)
 
     def test_contains_non_existing_point(self):
         """Test checking if a non-existing point is in the tree."""
         point = Point2D(0.5, 0.5)
         self.kd_tree.insert(point)
-        self.assertFalse(self.kd_tree.contains(Point2D(0.6, 0.6)))
+        self.assertFalse(Point2D(0.6, 0.6) in self.kd_tree)
 
     def test_range_search_empty_tree(self):
         """Test range search on an empty tree."""
@@ -84,7 +84,7 @@ class TestKdTree(unittest.TestCase):
         points = [Point2D(random.random(), random.random()) for _ in range(num_points)]
         for point in points:
             self.kd_tree.insert(point)
-        self.assertEqual(self.kd_tree.size, num_points)
+        self.assertEqual(len(self.kd_tree), num_points)
 
     def test_large_random_range_search(self):
         """Test range search with a large number of random points."""

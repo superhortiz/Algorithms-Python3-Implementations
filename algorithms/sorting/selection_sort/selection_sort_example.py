@@ -1,5 +1,6 @@
 import random
-from .selection_sort import selection_sort
+from algorithms import selection_sort
+
 
 def demo() -> None:
     """

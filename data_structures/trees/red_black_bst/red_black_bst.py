@@ -4,6 +4,7 @@ from colorama import init, Fore, Back, Style
 # Initialize colorama
 init(autoreset=True)
 
+
 class RedBlackBST:
     """
     A class representing a Red-Black Binary Search Tree (RedBlackBST) for efficient searching and insertion.

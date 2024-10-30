@@ -17,7 +17,7 @@ class RedBlackBST:
         - Delete: O(log N)
 
     Methods:
-        add(val): Adds a new node with the given value, using the value as the key.
+        add(value): Adds a new node with the given value, using the value as the key.
         ceiling(key): Finds the smallest key in the RedBlackBST that is greater than or equal to the given key.
         delete_max(): Deletes the maximum node in the Red-Black BST.
         delete_min(): Deletes the minimum node in the Red-Black BST.
@@ -27,6 +27,7 @@ class RedBlackBST:
         print_tree(): Prints the RedBlackBST in a structured format.
         print_tree_balanced(): Prints the RedBlackBST as a 2-3 Tree in a structured format.
         rank(key): Returns the number of keys less than the given key in the RedBlackBST.
+        range(key_lo, key_hi): Finds and returns all keys within the specified range [key_lo, key_hi].
 
     Special Methods:
         __bool__(): Checks if the RedBlackBST is not empty.
@@ -35,10 +36,22 @@ class RedBlackBST:
         __getitem__(key): Gets the value associated with the given key or a range of keys.
         __iter__(): Returns an iterator for in-order traversal of the RedBlackBST.
         __len__(): Gets the number of nodes in the RedBlackBST.
-        __setitem__(key, val): Sets the value for the given key in the RedBlackBST.
+        __setitem__(key, value): Sets the value for the given key in the RedBlackBST.
         __repr__(): Returns a string representation of the RedBlackBST.
         __reversed__(): Returns an iterator for reverse in-order traversal of the RedBlackBST.
+
+    Notes:
+        Insertion Methods:
+            - add(value): Inserts elements using the value as the key. This method can accept
+            any comparable data type.
+
+            - __setitem__(key, value): Inserts elements using an integer key. This allows the use
+            of `__getitem__(key)`, where the key can be an integer or a slice.
+
+        Range Queries:
+            - range(key_lo, key_hi): Returns all values within the specified range [key_lo, key_hi].
     """
+
     RED = True
     BLACK = False
 
@@ -52,9 +65,9 @@ class RedBlackBST:
             key (int): The key of the node.
             left (TreeNode): The left child of this node.
             right (TreeNode): The right child of this node.
-            val (Any): The value associated with the key.
+            value (Any): The value associated with the key.
         """
-        def __init__(self: 'TreeNode', key: int, val: Any, color: bool, count: int) -> None:
+        def __init__(self: 'TreeNode', key: int, value: Any, color: bool, count: int) -> None:
             """
             Initializes a TreeNode.
 
@@ -62,10 +75,10 @@ class RedBlackBST:
                 color (bool): Color of the link to the node's parent.
                 count (int): The size of the subtree rooted at this node.
                 key (int): The key of the node.
-                val (Any): The value associated with the key.
+                value (Any): The value associated with the key.
             """
             self.key = key
-            self.val = val
+            self.value = value
             self.color = color
             self.count = count
             self.left = None
@@ -261,59 +274,54 @@ class RedBlackBST:
         # Return the corresponding link to the node
         return node
 
-    def __setitem__(self: 'RedBlackBST', key: int, val: Any) -> None:
+    def __setitem__(self: 'RedBlackBST', key: int, value: Any) -> None:
         """
         Sets the value for the given key in the RedBlackBST.
 
         Args:
             key (int): The key of the node.
-            val (Any): The value to be set for the key.
+            value (Any): The value to be set for the key.
 
         Raises:
             ValueError: If 'key' is not an int type.
-            ValueError: If 'val' is None.
+            ValueError: If 'value' is None.
         """
         if not isinstance(key, int):
             raise ValueError("The key must be a integer type.")
 
-        if val is None:
+        if value is None:
             raise ValueError("ValueError: Invalid value.")
 
         # This handles the case when the client sets the key.
-        self._root = self._add(self._root, key, val)
+        self._root = self._add(self._root, key, value)
 
         # Set the root Black
         self._root.color = RedBlackBST.BLACK
 
-    def add(self: 'RedBlackBST', val: int) -> None:
+    def add(self: 'RedBlackBST', value: int) -> None:
         """
         Adds a new node with the given value, using the value as the key.
 
         Args:
-            val (int): The value to be added as both key and value.
+            value (int): The value to be added as both key and value.
 
-        Raises:
-            ValueError: If 'key' is not an int type.
-            ValueError: If 'val' is None.
         """
-        if not isinstance(val, int):
-            raise ValueError("The value must be a integer type.")
 
         # This handles the case when the client does not provide a key.
         # Then we use key = value.
-        self._root = self._add(self._root, val, val)
+        self._root = self._add(self._root, value, value)
 
         # Set the root Black
         self._root.color = RedBlackBST.BLACK
 
-    def _add(self: 'RedBlackBST', node: 'RedBlackBST.TreeNode', key: int, val: Any) -> 'RedBlackBST.TreeNode':
+    def _add(self: 'RedBlackBST', node: 'RedBlackBST.TreeNode', key: int, value: Any) -> 'RedBlackBST.TreeNode':
         """
         Helper method to add a new node to the RedBlackBST.
 
         Args:
             node (RedBlackBST.TreeNode): The root of the subtree.
             key (int): The key of the new node.
-            val (Any): The value associated with the key.
+            value (Any): The value associated with the key.
 
         Returns:
             RedBlackBST.TreeNode: The root of the subtree after insertion.
@@ -321,19 +329,19 @@ class RedBlackBST:
 
         # End of the tree reached, return a new TreeNode and color it RED
         if node is None:
-            return self.TreeNode(key, val, RedBlackBST.RED, 1)
+            return self.TreeNode(key, value, RedBlackBST.RED, 1)
 
         # Explore recursively the left child
         if key < node.key:
-            node.left = self._add(node.left, key, val)
+            node.left = self._add(node.left, key, value)
 
         # Explore recursively the right child
         elif key > node.key:
-            node.right = self._add(node.right, key, val)
+            node.right = self._add(node.right, key, value)
 
         # The key is already in the tree, ovewrite the value
         elif key == node.key:
-            node.val = val
+            node.value = value
 
         # Lean left
         if self._is_red(node.right) and not self._is_red(node.left):
@@ -506,7 +514,7 @@ class RedBlackBST:
             if key == node.key:
                 min_node = self._min(node.right)
                 node.key = min_node.key
-                node.val = min_node.val
+                node.value = min_node.value
                 node.right = self._delete_min(node.right)
             else:
                 # Recursively call _delete method in the right subtree
@@ -573,7 +581,7 @@ class RedBlackBST:
                 elif key > node.key:
                     node = node.right
                 elif key == node.key:
-                    return node.val
+                    return node.value
             raise KeyError(f"Key {key} not found in the tree.")
 
         # Case 2: Requesting a slice
@@ -668,7 +676,7 @@ class RedBlackBST:
             yield from in_order(node.left)
 
             # Return the current node
-            yield node.val
+            yield node.value
 
             # Recursively go to the right
             yield from in_order(node.right)
@@ -701,7 +709,7 @@ class RedBlackBST:
             yield from reversed_order(node.right)
 
             # Return the current node
-            yield node.val
+            yield node.value
 
             # Recursively go to the left
             yield from reversed_order(node.left)
@@ -888,7 +896,7 @@ class RedBlackBST:
         """
         if node is not None:
             color = Fore.RED if self._is_red(node) else Fore.RESET
-            print(f"{color}{' ' * (level * 4)}{prefix} {node.val}")
+            print(f"{color}{' ' * (level * 4)}{prefix} {node.value}")
             if node.left:
                 self._print_tree(node.left, level + 1, "L-->")
             if node.right:
@@ -912,7 +920,7 @@ class RedBlackBST:
         if node is not None:
             color = Fore.RED if self._is_red(node) else Fore.RESET
             level -= 1 if self._is_red(node) else 0
-            print(f"{color}{' ' * (level * 4)}{prefix} {node.val}")
+            print(f"{color}{' ' * (level * 4)}{prefix} {node.value}")
 
             if node.left:
                 self._print_tree_balanced(node.left, level + 1, "L-->")
@@ -964,3 +972,45 @@ class RedBlackBST:
             # Returns the size of the left subtree, because all those keys are less
             # than the current node's key
             return self._size(node.left)
+
+    def range(self, key_lo: Any, key_hi: Any) -> List[Any]:
+        """
+        Finds and returns all keys within the specified range [key_lo, key_hi].
+
+        Args:
+            key_lo (Any): The lower bound of the range.
+            key_hi (Any): The upper bound of the range.
+
+        Returns:
+            List[Any]: A list of keys within the specified range.
+        """
+        return self._range(self._root, key_lo, key_hi)
+
+    def _range(self: 'RedBlackBST', node: 'RedBlackBST.TreeNode', key_lo: Any, key_hi: Any) -> List[Any]:
+        """
+        Helper function to recursively find all keys within the specified range.
+
+        Args:
+            node (TreeNode): The current node being explored.
+            key_lo (Any): The lower bound of the range.
+            key_hi (Any): The upper bound of the range.
+
+        Yields:
+            Any: Keys within the specified range.
+        """
+
+        # End of the tree reached, return
+        if node is None:
+            return
+
+        # Explore recursively the left child
+        if key_lo < node.key:
+            yield from self._range(node.left, key_lo, key_hi)
+
+        # The key of the current node falls within the specified range
+        if key_lo <= node.key <= key_hi:
+            yield node.key
+
+        # Explore recursively the right child
+        if key_hi > node.key:
+            yield from self._range(node.right, key_lo, key_hi)

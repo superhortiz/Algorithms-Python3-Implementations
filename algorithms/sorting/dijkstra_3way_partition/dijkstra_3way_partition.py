@@ -17,31 +17,31 @@ def sort(a: list, lo: int, hi: int) -> None:
         return
 
     # Initialize pointers for less than and greater than partitions
-    lt, gt = lo, hi
+    less_than, greater_than = lo, hi
     
     # Choose the partitioning element (pivot)
-    v = a[lo]
+    pivot = a[lo]
 
     # Initialize the current element pointer
     i = lo
 
-    while i <= gt:
-        if a[i] < v:
-            # Element is less than pivot, swap with element at lt and move both pointers
-            a[lt], a[i] = a[i], a[lt]
+    while i <= greater_than:
+        if a[i] < pivot:
+            # Element is less than pivot, swap with element at less_than and move both pointers
+            a[less_than], a[i] = a[i], a[less_than]
             i += 1
-            lt += 1
-        elif a[i] > v:
-            # Element is greater than pivot, swap with element at gt and move gt pointer
-            a[i], a[gt] = a[gt], a[i]
-            gt -= 1
+            less_than += 1
+        elif a[i] > pivot:
+            # Element is greater than pivot, swap with element at greater_than and move greater_than pointer
+            a[i], a[greater_than] = a[greater_than], a[i]
+            greater_than -= 1
         else:
             # Element is equal to pivot, just move the current element pointer
             i += 1
 
     # Recursively sort the subarrays
-    sort(a, lo, lt - 1)
-    sort(a, lt + 1, hi)
+    sort(a, lo, less_than - 1)
+    sort(a, less_than + 1, hi)
 
 def dijkstra_3way_partition(a: list) -> None:
     """
